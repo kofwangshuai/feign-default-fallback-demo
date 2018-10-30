@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kof.fruit.a;
+package com.kof.fruit.a.factorys;
 
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
@@ -45,10 +45,7 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Proxy;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -144,7 +141,7 @@ class FeignClientsFallbackRegistrar implements ImportBeanDefinitionRegistrar,
     private void registerFeignClient(BeanDefinitionRegistry registry,
                                      AnnotationMetadata annotationMetadata, Map<String, Object> attributes,BeanDefinition candidateComponent) {
 //        System.getProperties().put("sun.misc.ProxyGenerator.saveGeneratedFiles", "true");
-        String beanClassName1 = candidateComponent.getBeanClassName();
+
         String className = annotationMetadata.getClassName();
         Invoker invoker = new Invoker();
         Object instance = null;
@@ -169,14 +166,9 @@ class FeignClientsFallbackRegistrar implements ImportBeanDefinitionRegistrar,
                 MutablePropertyValues propertyValues = beanDefinition1.getPropertyValues();
                 propertyValues.addPropertyValue("fallback", instance.getClass());
                 beanDefinition1.setAttribute("fallback", instance.getClass());
-
-                String[] beanDefinitionNames111 = registry.getBeanDefinitionNames();
-                int a=12;
                 beanDefinition2=beanDefinition1;
             }
         }
-
-        String[] beanDefinitionNames1 = registry.getBeanDefinitionNames();
         validate(attributes);
         String name = getName(attributes);
 
@@ -192,14 +184,10 @@ class FeignClientsFallbackRegistrar implements ImportBeanDefinitionRegistrar,
         if (StringUtils.hasText(qualifier)) {
             alias = qualifier;
         }
-//        registry.removeBeanDefinition(className);
+
         BeanDefinitionHolder holder = new BeanDefinitionHolder(beanDefinition, className,
                 new String[]{alias});
-        String[] beanDefinitionNames3 = registry.getBeanDefinitionNames();
         BeanDefinitionReaderUtils.registerBeanDefinition(holder, registry);
-        String[] beanDefinitionNames2 = registry.getBeanDefinitionNames();
-
-        BeanDefinition beanDefinition3 = registry.getBeanDefinition(className);
 
         if (instance != null) {
             String canonicalName2 = instance.getClass().getCanonicalName();

@@ -1,6 +1,7 @@
-package com.kof.fruit.a;
+package com.kof.fruit.a.factorys;
 
 import com.alibaba.fastjson.JSON;
+import com.kof.fruit.a.entity.FResponeData;
 
 
 import java.lang.reflect.InvocationHandler;
@@ -41,12 +42,8 @@ public class MethodProxy<T> implements InvocationHandler {
         // TODO :: 重新设计一下实现方式 ：：
         String name = method.getName();
         String clazz=method.getDeclaringClass().getCanonicalName();
-
-        Class<?> returnType = method.getReturnType();
         Type type=method.getGenericReturnType();
-
         String typeName = type.getTypeName();
-
         ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
 
         try {
@@ -66,8 +63,6 @@ public class MethodProxy<T> implements InvocationHandler {
                 fResponeData.setMessage("hystrix fall back: method name ="+name+" , class name = "+clazz+"....................");
                 return fResponeData;
             }
-
-
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -75,34 +70,6 @@ public class MethodProxy<T> implements InvocationHandler {
         } catch (InstantiationException e) {
             e.printStackTrace();
         }
-//        try {
-//            Class<Void> voidClass = void.class;
-//            Object aClass = returnType.getClass().newInstance();
-//            if (aClass==null){
-//                FResponeData fResponeData = new FResponeData();
-//                fResponeData.setCode("1231231");
-//                fResponeData.setMessage("hystrix fall back: method name ="+name+" , class name = "+clazz+"....................");
-//                String jsonString = JSON.toJSONString(fResponeData);
-//                return jsonString;
-//            }else if (aClass instanceof FResponeData){
-//                FResponeData fResponeData = new FResponeData();
-//                fResponeData.setCode("1231231");
-//                fResponeData.setMessage("hystrix fall back: method name ="+name+" , class name = "+clazz+"....................");
-//                return fResponeData;
-//            }else if (aClass instanceof String){
-//                FResponeData fResponeData = new FResponeData();
-//
-//                fResponeData.setMessage("hystrix fall back: method name ="+name+" , class name = "+clazz+"....................");
-//                fResponeData.setCode("1231231");
-//                String jsonString = JSON.toJSONString(fResponeData);
-//                return jsonString;
-//            }
-//        } catch (InstantiationException e) {
-//            e.printStackTrace();
-//        } catch (IllegalAccessException e) {
-//            e.printStackTrace();
-//        }
-
         FResponeData fResponeData = new FResponeData();
         fResponeData.setCode("1231231");
         fResponeData.setMessage("hystrix fall back: method name ="+name+" , class name = "+clazz+"....................");

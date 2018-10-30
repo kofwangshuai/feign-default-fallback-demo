@@ -1,4 +1,4 @@
-package com.kof.fruit.a;
+package com.kof.fruit.a.entity;
 
 import java.io.Serializable;
 

@@ -1,4 +1,4 @@
-package com.kof.fruit.a;
+package com.kof.fruit.a.factorys;
 
 
 import org.springframework.cloud.openfeign.EnableFeignClients;
