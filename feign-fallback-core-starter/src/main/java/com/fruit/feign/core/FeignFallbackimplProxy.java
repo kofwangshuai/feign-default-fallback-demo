@@ -61,6 +61,8 @@ public class FeignFallbackimplProxy implements InvocationHandler {
         ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
         try {
             Class<?> methodGenericReturnType = contextClassLoader.loadClass(type.getTypeName());
+
+            /** todo： 做成可扩展的方式 */
             fallbackData = createMethodReturnData(method, methodGenericReturnType.newInstance());
         } catch (Exception e) {
             logger.error("Message :"+e.getMessage()+"LocalizedMessage："+e.getLocalizedMessage() ,e);
@@ -72,6 +74,8 @@ public class FeignFallbackimplProxy implements InvocationHandler {
     private Object createMethodReturnData(Method method, Object o) {
         Object fallbackData=null;
         if (o instanceof String){
+
+            // TODO: 2018/10/31
             FallbackData fResponeData = createDefaultFallbackData(method);
             String jsonString = JSON.toJSONString(fResponeData);
             fallbackData= jsonString;
@@ -95,7 +99,7 @@ public class FeignFallbackimplProxy implements InvocationHandler {
             FallbackData Data = createDefaultFallbackData(method);
             fallbackData=Data;
         }else {
-
+            // TODO: 2018/10/31
         }
         return fallbackData;
     }
