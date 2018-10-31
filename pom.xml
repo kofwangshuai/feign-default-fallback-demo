@@ -17,6 +17,7 @@
     <modules>
         <module>fruit-register</module>
         <module>fruit-feign-a</module>
+        <module>feign-fallback-core-starter</module>
     </modules>
     <packaging>pom</packaging>
 
