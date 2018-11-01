@@ -28,7 +28,7 @@ public class FeignClientsBeanDefinitionRegistryPostProcessor implements BeanDefi
                 e.printStackTrace();
             }
             ConstructorArgumentValues constructorArgumentValues = new ConstructorArgumentValues();
-            constructorArgumentValues.addGenericArgumentValue(new FeignFallbackimplProxy<>());
+            constructorArgumentValues.addGenericArgumentValue(new FeignFallbackimplProxy());
             definition.setConstructorArgumentValues(constructorArgumentValues);
             definition.setScope("prototype");       //设置scope
             definition.setLazyInit(false);          //设置是否懒加载

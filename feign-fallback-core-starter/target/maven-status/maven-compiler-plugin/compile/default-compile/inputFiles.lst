@@ -1,0 +1,10 @@
+E:\CODING\feign-default-fallback-demo\feign-fallback-core-starter\src\main\java\com\fruit\feign\fallback.java
+E:\CODING\feign-default-fallback-demo\feign-fallback-core-starter\src\main\java\com\fruit\feign\core\Invoker.java
+E:\CODING\feign-default-fallback-demo\feign-fallback-core-starter\src\main\java\com\fruit\feign\spi\IFallbackDataSpi.java
+E:\CODING\feign-default-fallback-demo\feign-fallback-core-starter\src\main\java\com\fruit\feign\spi\DefaultFallbackDataSpi.java
+E:\CODING\feign-default-fallback-demo\feign-fallback-core-starter\src\main\java\com\fruit\feign\core\FeignFallbackimplProxy.java
+E:\CODING\feign-default-fallback-demo\feign-fallback-core-starter\src\main\java\com\fruit\feign\data\DefaultFallbackData.java
+E:\CODING\feign-default-fallback-demo\feign-fallback-core-starter\src\main\java\com\fruit\feign\core\FeignClientsFallbackRegistrar.java
+E:\CODING\feign-default-fallback-demo\feign-fallback-core-starter\src\main\java\com\fruit\feign\core\EnableFeignFallbackClients.java
+E:\CODING\feign-default-fallback-demo\feign-fallback-core-starter\src\main\java\com\fruit\feign\data\FallbackData.java
+E:\CODING\feign-default-fallback-demo\feign-fallback-core-starter\src\main\java\com\fruit\feign\core\FeignClientsBeanDefinitionRegistryPostProcessor.java

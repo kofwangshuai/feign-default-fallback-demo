@@ -1,7 +1,8 @@
 package com.kof.fruit.a.feign;
 
-import com.kof.fruit.a.entity.FResponeData;
 
+
+import com.fruit.feign.data.DefaultFallbackData;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -11,6 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public interface TestFeign2 {
 
     @RequestMapping(path = "/test2" ,method = RequestMethod.GET)
-    FResponeData getTestInfo2();
+    DefaultFallbackData getTestInfo2();
 
 }

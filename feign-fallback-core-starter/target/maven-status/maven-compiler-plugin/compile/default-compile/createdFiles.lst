@@ -1,0 +1,13 @@
+com\fruit\feign\data\DefaultFallbackData.class
+com\fruit\feign\fallback.class
+com\fruit\feign\core\EnableFeignFallbackClients.class
+com\fruit\feign\core\FeignClientsFallbackRegistrar$AllTypeFilter.class
+com\fruit\feign\core\FeignClientsFallbackRegistrar.class
+com\fruit\feign\core\Invoker.class
+com\fruit\feign\spi\DefaultFallbackDataSpi.class
+com\fruit\feign\core\FeignClientsFallbackRegistrar$2.class
+com\fruit\feign\core\FeignClientsBeanDefinitionRegistryPostProcessor.class
+com\fruit\feign\core\FeignFallbackimplProxy.class
+com\fruit\feign\core\FeignClientsFallbackRegistrar$1.class
+com\fruit\feign\data\FallbackData.class
+com\fruit\feign\spi\IFallbackDataSpi.class
