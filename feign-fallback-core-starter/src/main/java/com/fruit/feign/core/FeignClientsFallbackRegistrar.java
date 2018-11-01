@@ -174,25 +174,29 @@ class FeignClientsFallbackRegistrar implements ImportBeanDefinitionRegistrar,
 
             }
         }
-        validate(attributes);
-        String name = getName(attributes);
 
-        String alias = name + "FeignClient";
-        AbstractBeanDefinition beanDefinition = beanDefinition2 != null ? (AbstractBeanDefinition) beanDefinition2 : null;
+        if (fallbackFlag){
+            validate(attributes);
+            String name = getName(attributes);
 
-        boolean primary = (Boolean) attributes.get("primary"); // has a default, won't be null
+            String alias = name + "FeignClient";
+            AbstractBeanDefinition beanDefinition = beanDefinition2 != null ? (AbstractBeanDefinition) beanDefinition2 : null;
 
-        beanDefinition.setPrimary(primary);
+            boolean primary = (Boolean) attributes.get("primary"); // has a default, won't be null
 
-        String qualifier = getQualifier(attributes);
+            beanDefinition.setPrimary(primary);
 
-        if (StringUtils.hasText(qualifier)) {
-            alias = qualifier;
+            String qualifier = getQualifier(attributes);
+
+            if (StringUtils.hasText(qualifier)) {
+                alias = qualifier;
+            }
+
+            BeanDefinitionHolder holder = new BeanDefinitionHolder(beanDefinition, className,
+                    new String[]{alias});
+            BeanDefinitionReaderUtils.registerBeanDefinition(holder, registry);
         }
 
-        BeanDefinitionHolder holder = new BeanDefinitionHolder(beanDefinition, className,
-                new String[]{alias});
-        BeanDefinitionReaderUtils.registerBeanDefinition(holder, registry);
 
         if (instance != null&&fallbackFlag) {
             String canonicalName2 = instance.getClass().getCanonicalName();

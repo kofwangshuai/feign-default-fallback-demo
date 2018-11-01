@@ -5,6 +5,7 @@ import com.fruit.feign.core.EnableFeignFallbackClients;
 import com.fruit.feign.data.DefaultFallbackData;
 import com.kof.fruit.a.feign.TestFeginClient;
 import com.kof.fruit.a.feign.TestFeign2;
+import com.kof.fruit.a.feign.TestFeign3;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -40,6 +41,9 @@ public class FeignFallbackApplication {
     @Autowired
     private TestFeign2 testFeign2;
 
+    @Autowired
+    private TestFeign3 testFeign3;
+
 
     @RequestMapping(value = "/test2" ,method = RequestMethod.GET)
     public DefaultFallbackData getTestInfo2(){
@@ -57,6 +61,11 @@ public class FeignFallbackApplication {
         return "123131313";
     }
 
+    @RequestMapping(value = "/test3" ,method = RequestMethod.GET)
+    public String getTestInfo3() throws InterruptedException {
+        Thread.sleep(1000*200);
+        return "123131313";
+    }
     @RequestMapping(value = "/test/1111" ,method = RequestMethod.GET)
     public String getTestInfo(){
         return testFeginClient.getTestInfo1();
@@ -65,6 +74,11 @@ public class FeignFallbackApplication {
     @RequestMapping(value = "/test/2222" ,method = RequestMethod.GET)
     public DefaultFallbackData getTestInfo2222(){
         return testFeign2.getTestInfo2();
+    }
+
+    @RequestMapping(value = "/test/3333" ,method = RequestMethod.GET)
+    public DefaultFallbackData getTestInfo3333(){
+        return testFeign3.getTestInfo3();
     }
 
 }

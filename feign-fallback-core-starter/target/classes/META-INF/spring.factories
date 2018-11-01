@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.fruit.feign.core.FeignClientsBeanDefinitionRegistryPostProcessor
