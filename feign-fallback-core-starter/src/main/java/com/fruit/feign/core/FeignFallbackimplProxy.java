@@ -60,25 +60,24 @@ public class FeignFallbackimplProxy implements InvocationHandler {
         try {
             Class<?> methodGenericReturnType = contextClassLoader.loadClass(type.getTypeName());
             Object o = methodGenericReturnType.newInstance();
-
-
-
             Map<Class, Map<String, String>> defaultFallbackSpi = createDefaultFallbackSpi();
             Map<String, String> stringStringMap = defaultFallbackSpi.get(o.getClass());
             Field[] fields = o.getClass().getDeclaredFields();
-
+            boolean defaultDataKey=false;
             for (Field field :fields){
                 field.setAccessible(true);
                 String name1 = field.getName();
                 if (stringStringMap.containsKey(name1)){
+                    defaultDataKey=true;
                     field.set(o,stringStringMap.get(name1));
                 }
-                // TODO: 2018/11/1   spi  加载配置类 ： name 和 value
             }
-            fallbackData= o;
-
-//            /** todo： 做成可扩展的方式 */
-//            fallbackData = createMethodReturnData(method, methodGenericReturnType.newInstance());
+            if (defaultDataKey){
+                fallbackData= o;
+            }else {
+                /** todo： 做成可扩展的方式 */
+            fallbackData = createMethodReturnData(method, methodGenericReturnType.newInstance());
+            }
         } catch (Exception e) {
             logger.error("Message :"+e.getMessage()+"LocalizedMessage："+e.getLocalizedMessage() ,e);
             throw e;
@@ -103,8 +102,6 @@ public class FeignFallbackimplProxy implements InvocationHandler {
     private Object createMethodReturnData(Method method, Object o) {
         Object fallbackData=null;
         if (o instanceof String){
-
-            // TODO: 2018/10/31
             FallbackData fResponeData = createDefaultFallbackData(method);
             String jsonString = JSON.toJSONString(fResponeData);
             fallbackData= jsonString;
@@ -124,11 +121,9 @@ public class FeignFallbackimplProxy implements InvocationHandler {
             return new Boolean(false);
         }else if ( o instanceof  Character){
             return new Character('1');
-        }else if ( o instanceof  DefaultFallbackData){
+        }else {
             FallbackData Data = createDefaultFallbackData(method);
             fallbackData=Data;
-        }else {
-            // TODO: 2018/10/31
         }
         return fallbackData;
     }
@@ -150,20 +145,6 @@ public class FeignFallbackimplProxy implements InvocationHandler {
         }
     }
 
-    private  void registerPlugins() {
-        logger.info("Loading plugins...");
-        ServiceLoader<IFallbackDataSpi> plugins = ServiceLoader.load(IFallbackDataSpi.class);
-        for (IFallbackDataSpi plugin : plugins) {
-            logger.info("Loading plugin {}({})",
-                    plugin.name(), plugin.getClass().getCanonicalName());
-            try {
-                plugin.register();
-                logger.info("Loaded plugin {}", plugin.name());
-            } catch (Exception e) {
-//                throw new HugeException("Failed to load plugin '%s'",
-//                        plugin.name(), e);
-            }
-        }
-    }
+
 
 }
