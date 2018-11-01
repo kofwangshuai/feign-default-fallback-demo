@@ -24,3 +24,4 @@ hs_err_pid*
 *.iml
 fruit-feign-a/target/
 fruit-register/target/
+fruit-fallback-core-starter/target/

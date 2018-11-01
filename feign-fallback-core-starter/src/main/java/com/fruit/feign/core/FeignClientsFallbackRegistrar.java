@@ -141,6 +141,8 @@ class FeignClientsFallbackRegistrar implements ImportBeanDefinitionRegistrar,
                                      AnnotationMetadata annotationMetadata, Map<String, Object> attributes,BeanDefinition candidateComponent) {
 //        System.getProperties().put("sun.misc.ProxyGenerator.saveGeneratedFiles", "true");
 
+        boolean fallbackFlag=false;
+
         String className = annotationMetadata.getClassName();
         Invoker invoker = new Invoker();
         Object instance = null;
@@ -163,9 +165,13 @@ class FeignClientsFallbackRegistrar implements ImportBeanDefinitionRegistrar,
 
             if (className.equals(beanClassName)) {
                 MutablePropertyValues propertyValues = beanDefinition1.getPropertyValues();
-                propertyValues.addPropertyValue("fallback", instance.getClass());
-                beanDefinition1.setAttribute("fallback", instance.getClass());
-                beanDefinition2=beanDefinition1;
+                if (propertyValues.get("fallback" ).equals(void.class)){
+                    propertyValues.addPropertyValue("fallback", instance.getClass());
+                    beanDefinition1.setAttribute("fallback", instance.getClass());
+                    beanDefinition2=beanDefinition1;
+                    fallbackFlag=true;
+                }
+
             }
         }
         validate(attributes);
@@ -188,7 +194,7 @@ class FeignClientsFallbackRegistrar implements ImportBeanDefinitionRegistrar,
                 new String[]{alias});
         BeanDefinitionReaderUtils.registerBeanDefinition(holder, registry);
 
-        if (instance != null) {
+        if (instance != null&&fallbackFlag) {
             String canonicalName2 = instance.getClass().getCanonicalName();
             FeignClientsBeanDefinitionRegistryPostProcessor.fallbacks.put(canonicalName2, instance);
         }
