@@ -67,7 +67,7 @@ public class FeignFallbackimplProxy implements InvocationHandler {
             for (Field field :fields){
                 field.setAccessible(true);
                 String name1 = field.getName();
-                if (stringStringMap.containsKey(name1)){
+                if (stringStringMap==null&&stringStringMap.containsKey(name1)){
                     defaultDataKey=true;
                     field.set(o,stringStringMap.get(name1));
                 }
