@@ -5,13 +5,16 @@ import com.fruit.feign.data.DefaultFallbackData;
 import java.util.HashMap;
 import java.util.Map;
 
+/***
+ * 1  需要将 带有@Feignclinet的接口的方法，在发生服务熔断的时候，预设的响应数据 ;
+ *
+ * */
+
 public class DefaultFallbackDataSpi implements IFallbackDataSpi {
 
-    /** 1  指定當前配置返回的結果對象中 需要初始化的字段 **/
-    private Map<Class,Map<String ,String>> returnTypeDataMap=new HashMap<>();
+    private Map<Class,Object> returnTypeDataMap=new HashMap<>();
 
-
-    public Map<Class, Map<String, String>> getReturnTypeDataMap() {
+    public Map<Class, Object> getReturnTypeDataMap() {
         return returnTypeDataMap;
     }
 
@@ -20,10 +23,9 @@ public class DefaultFallbackDataSpi implements IFallbackDataSpi {
     }
 
     void init(){
-        // TODO: 2018/11/1   可以优化的更合理一些 ： 可以需要配置项目中所有的接口返回值类型，以及响应的结果
-        Map<String,String> keys=new HashMap<>();
-        keys.put("code","fallback");
-        keys.put("message","hytrix熔断测试的case");
+        DefaultFallbackData keys=new DefaultFallbackData<>();
+        keys.setCode("fallback");
+        keys.setMessage("hytrix熔断测试的case");
         returnTypeDataMap.put(DefaultFallbackData.class,keys);
     }
 

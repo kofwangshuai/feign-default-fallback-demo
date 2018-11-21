@@ -1,20 +1,17 @@
 package com.fruit.feign.core;
 
-
-
 import java.lang.reflect.Proxy;
 
-public class Invoker  {
-    /** todo : 临时的demo实现 */
+public class Invoker {
 
-    public Invoker(){};
+    public Invoker() {
+    }
+
     private Object newProxyInstance;
-    public Object getInstance(Class<?> cls){
+
+    public Object getInstance(Class<?> cls) {
         FeignFallbackimplProxy invocationHandler = new FeignFallbackimplProxy();
-         newProxyInstance = Proxy.newProxyInstance(
-                cls.getClassLoader(),
-                new Class[] { cls},
-                 invocationHandler);
+        newProxyInstance = Proxy.newProxyInstance(cls.getClassLoader(), new Class[]{cls}, invocationHandler);
         return newProxyInstance;
     }
 

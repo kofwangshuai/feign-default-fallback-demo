@@ -16,6 +16,8 @@
 
 package com.fruit.feign.core;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -52,6 +54,7 @@ import java.net.URL;
 import java.util.*;
 
 /**
+ * @author kof wang
  * @author Spencer Gibb
  * @author Jakub Narloch
  * @author Venil Noronha
@@ -59,7 +62,7 @@ import java.util.*;
  */
 class FeignClientsFallbackRegistrar implements ImportBeanDefinitionRegistrar,
         ResourceLoaderAware, EnvironmentAware {
-
+    private static Logger logger= LoggerFactory.getLogger(FeignClientsFallbackRegistrar.class);
     private final static Map<Class<?>, Proxy> fallbacks = new HashMap();
 
     private ResourceLoader resourceLoader;
@@ -195,13 +198,17 @@ class FeignClientsFallbackRegistrar implements ImportBeanDefinitionRegistrar,
             BeanDefinitionHolder holder = new BeanDefinitionHolder(beanDefinition, className,
                     new String[]{alias});
             BeanDefinitionReaderUtils.registerBeanDefinition(holder, registry);
+            logger.info("【FeignClient 二次注册 】= BeanDefinitionReaderUtils.registerBeanDefinition 【className】 = " +className);
+
+            if (instance != null&&fallbackFlag) {
+                String canonicalName2 = instance.getClass().getCanonicalName();
+                FeignClientsBeanDefinitionRegistryPostProcessor.fallbacks.put(canonicalName2, instance);
+                logger.info("【fallback instance 缓存 】: 【fallback instance className】 = "+canonicalName2 + "【feignClient  className】"+className);
+            }
         }
 
 
-        if (instance != null&&fallbackFlag) {
-            String canonicalName2 = instance.getClass().getCanonicalName();
-            FeignClientsBeanDefinitionRegistryPostProcessor.fallbacks.put(canonicalName2, instance);
-        }
+
 
     }
 

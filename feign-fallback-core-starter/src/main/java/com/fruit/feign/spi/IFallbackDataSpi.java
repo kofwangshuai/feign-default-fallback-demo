@@ -7,5 +7,5 @@ public interface IFallbackDataSpi extends Serializable {
 
      String name();
 
-     public Map<Class, Map<String, String>> getReturnTypeDataMap() ;
+     Map<Class, Object> getReturnTypeDataMap() ;
 }

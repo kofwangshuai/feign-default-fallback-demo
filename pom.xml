@@ -63,6 +63,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-config-client</artifactId>
+            <version>2.0.0.RELEASE</version>
+        </dependency>
     </dependencies>
 
     <!-- todo 项目所以依赖的版本号管理放在 顶层的pom文件中管理-->
