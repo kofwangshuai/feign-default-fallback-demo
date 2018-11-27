@@ -62,7 +62,7 @@ import java.util.*;
  */
 class FeignClientsFallbackRegistrar implements ImportBeanDefinitionRegistrar,
         ResourceLoaderAware, EnvironmentAware {
-    private static Logger logger= LoggerFactory.getLogger(FeignClientsFallbackRegistrar.class);
+    private static Logger logger = LoggerFactory.getLogger(FeignClientsFallbackRegistrar.class);
     private final static Map<Class<?>, Proxy> fallbacks = new HashMap();
 
     private ResourceLoader resourceLoader;
@@ -134,27 +134,26 @@ class FeignClientsFallbackRegistrar implements ImportBeanDefinitionRegistrar,
                                     FeignClient.class.getCanonicalName());
 
                     String name = getClientName(attributes);
-                    registerFeignClient(registry, annotationMetadata, attributes,candidateComponent);
+                    registerFeignClient(registry, annotationMetadata, attributes, candidateComponent);
                 }
             }
         }
     }
 
     private void registerFeignClient(BeanDefinitionRegistry registry,
-                                     AnnotationMetadata annotationMetadata, Map<String, Object> attributes,BeanDefinition candidateComponent) {
+                                     AnnotationMetadata annotationMetadata, Map<String, Object> attributes, BeanDefinition candidateComponent) {
 //        System.getProperties().put("sun.misc.ProxyGenerator.saveGeneratedFiles", "true");
 
-        boolean fallbackFlag=false;
-
+        boolean fallbackFlag = false;
         String className = annotationMetadata.getClassName();
         Invoker invoker = new Invoker();
         Object instance = null;
         try {
             instance = invoker.getInstance(Class.forName(className));
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            /** 获取动态代理类失败以后，不抛出异常*/
+            logger.warn(e.getMessage(),e);
         }
-
         if (instance == null) {
             instance = void.class;
         }
@@ -164,50 +163,43 @@ class FeignClientsFallbackRegistrar implements ImportBeanDefinitionRegistrar,
         for (String name : beanDefinitionNames) {
             BeanDefinition beanDefinition1 = registry.getBeanDefinition(name);
             String beanClassName = (String) beanDefinition1.getPropertyValues().get("type");
-            // TODO: 2018/10/30  : 判斷是否feignclinet 注解已經配置 fallback 或者fallbackFactory類
 
             if (className.equals(beanClassName)) {
                 MutablePropertyValues propertyValues = beanDefinition1.getPropertyValues();
-                if (propertyValues.get("fallback" ).equals(void.class)){
+                /** 支持原生的fallback机制，过滤掉已经配置好fallback 或者 fallbackFactory的 Feignclient的二次注册**/
+                if (propertyValues.get("fallback").equals(void.class)&&propertyValues.get("fallbackFactory").equals(void.class)) {
                     propertyValues.addPropertyValue("fallback", instance.getClass());
                     beanDefinition1.setAttribute("fallback", instance.getClass());
-                    beanDefinition2=beanDefinition1;
-                    fallbackFlag=true;
+                    beanDefinition2 = beanDefinition1;
+                    /** Feignclient的二次注册开关 开启，*/
+                    fallbackFlag = true;
                 }
 
             }
         }
 
-        if (fallbackFlag){
+        if (fallbackFlag) {
             validate(attributes);
             String name = getName(attributes);
-
             String alias = name + "FeignClient";
             AbstractBeanDefinition beanDefinition = beanDefinition2 != null ? (AbstractBeanDefinition) beanDefinition2 : null;
-
             boolean primary = (Boolean) attributes.get("primary"); // has a default, won't be null
-
             beanDefinition.setPrimary(primary);
-
             String qualifier = getQualifier(attributes);
-
             if (StringUtils.hasText(qualifier)) {
                 alias = qualifier;
             }
-
             BeanDefinitionHolder holder = new BeanDefinitionHolder(beanDefinition, className,
                     new String[]{alias});
             BeanDefinitionReaderUtils.registerBeanDefinition(holder, registry);
-            logger.info("【FeignClient 二次注册 】= BeanDefinitionReaderUtils.registerBeanDefinition 【className】 = " +className);
+            logger.info("【FeignClient 二次注册 】= BeanDefinitionReaderUtils.registerBeanDefinition 【className】 = " + className);
 
-            if (instance != null&&fallbackFlag) {
+            if (instance != null && fallbackFlag) {
                 String canonicalName2 = instance.getClass().getCanonicalName();
                 FeignClientsBeanDefinitionRegistryPostProcessor.fallbacks.put(canonicalName2, instance);
-                logger.info("【fallback instance 缓存 】: 【fallback instance className】 = "+canonicalName2 + "【feignClient  className】"+className);
+                logger.info("【fallback instance 缓存 】: 【fallback instance className】 = " + canonicalName2 + "【feignClient  className】" + className);
             }
         }
-
-
 
 
     }

@@ -20,7 +20,7 @@ import java.util.ServiceLoader;
 
 public class FeignFallbackimplProxy implements InvocationHandler {
 
-    Logger logger =LoggerFactory.getLogger(FeignFallbackimplProxy.class);
+    Logger logger = LoggerFactory.getLogger(FeignFallbackimplProxy.class);
 
 
     @Override
@@ -28,23 +28,23 @@ public class FeignFallbackimplProxy implements InvocationHandler {
         String className = method.getDeclaringClass().getName();
         if (Object.class.equals(method.getDeclaringClass())) {
             //如果传进来的是一个實現類
-            if (logger.isDebugEnabled()){
-                logger.debug(" \n\n >>>>>>>>>>>>>>>>> \n this class 【"+className+" 】 is an interface \n<<<<<<<<<<<<<<<<<<<< \n \n");
+            if (logger.isDebugEnabled()) {
+                logger.debug(" \n\n >>>>>>>>>>>>>>>>> \n this class 【" + className + " 】 is an interface \n<<<<<<<<<<<<<<<<<<<< \n \n");
             }
 
             try {
                 return method.invoke(this, args);
-            }catch (Exception e){
-                logger.error(e.getMessage() ,e);
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
                 throw e;
             } catch (Throwable t) {
-                logger.error(t.getMessage(),t);
+                logger.error(t.getMessage(), t);
                 throw t;
             }
         } else {
             //如果传进来的是一个接口（核心)
-            if (logger.isDebugEnabled()){
-                logger.debug(" \n\n >>>>>>>>>>>>>>>>> \n this class 【"+className+" 】 is an interface \n<<<<<<<<<<<<<<<<<<<< \n \n");
+            if (logger.isDebugEnabled()) {
+                logger.debug(" \n\n >>>>>>>>>>>>>>>>> \n this class 【" + className + " 】 is an interface \n<<<<<<<<<<<<<<<<<<<< \n \n");
             }
             return run(method, args);
         }
@@ -52,24 +52,24 @@ public class FeignFallbackimplProxy implements InvocationHandler {
 
     /**
      * 实现接口的核心方法
+     *
      * @param method
      * @param args
      * @return
      */
-    public Object run(Method method,Object[] args) throws Exception{
+    public Object run(Method method, Object[] args) throws Exception {
 
 
-
-        Object fallbackData=null;
+        Object fallbackData = null;
         traceLog(method, args);
-        Type type=method.getGenericReturnType();
+        Type type = method.getGenericReturnType();
 
         /* todo : 判断返回结构是一个map ,void 等等的时候的处理方式 ： */
         try {
-            if (type instanceof ParameterizedType){
-                ParameterizedType  parameterizedType=(ParameterizedType)type;
+            if (type instanceof ParameterizedType) {
+                ParameterizedType parameterizedType = (ParameterizedType) type;
                 Type rawType = parameterizedType.getRawType();
-                type=rawType;
+                type = rawType;
             }
             String typeName = type.getTypeName();
             Map<Class, Object> defaultFallbackSpi = createDefaultFallbackSpi();
@@ -84,14 +84,14 @@ public class FeignFallbackimplProxy implements InvocationHandler {
 //                    field.set(o,stringStringMap.get(name1));
 //                }
 //            }
-            if (stringStringMap!=null){
-                fallbackData= stringStringMap;
-            }else {
-                throw  new NullPointerException(" 缺少配置 ：");
+            if (stringStringMap != null) {
+                fallbackData = stringStringMap;
+            } else {
+                throw new NullPointerException(" 缺少配置 ：");
 //                fallbackData = createMethodReturnData(method, methodGenericReturnType.newInstance());
             }
         } catch (Exception e) {
-            logger.error("Message :"+e.getMessage()+"LocalizedMessage："+e.getLocalizedMessage() ,e);
+            logger.error("Message :" + e.getMessage() + "LocalizedMessage：" + e.getLocalizedMessage(), e);
             throw e;
         }
         return fallbackData;
@@ -99,7 +99,7 @@ public class FeignFallbackimplProxy implements InvocationHandler {
 
     private Map<Class, Object> createDefaultFallbackSpi() {
 
-        Map<Class, Object> resultMap=new HashMap<>();
+        Map<Class, Object> resultMap = new HashMap<>();
         ServiceLoader<IFallbackDataSpi> serviceLoader = ServiceLoader.load(IFallbackDataSpi.class);
         Iterator<IFallbackDataSpi> it = serviceLoader.iterator();
         while (it.hasNext()) {
@@ -112,30 +112,30 @@ public class FeignFallbackimplProxy implements InvocationHandler {
     }
 
     private Object createMethodReturnData(Method method, Object o) {
-        Object fallbackData=null;
-        if (o instanceof String){
+        Object fallbackData = null;
+        if (o instanceof String) {
             FallbackData fResponeData = createDefaultFallbackData(method);
             String jsonString = JSON.toJSONString(fResponeData);
-            fallbackData= jsonString;
-        }else if ( o instanceof  Byte){
+            fallbackData = jsonString;
+        } else if (o instanceof Byte) {
             return new Byte("-1");
-        }else if ( o instanceof  Integer){
+        } else if (o instanceof Integer) {
             return new Integer(-1);
-        }else if ( o instanceof  Long){
+        } else if (o instanceof Long) {
             return new Long("-1");
-        }else if ( o instanceof  Float){
+        } else if (o instanceof Float) {
             return new Float("-1");
-        }else if ( o instanceof  Short){
+        } else if (o instanceof Short) {
             return new Short("-1");
-        }else if ( o instanceof  Double){
+        } else if (o instanceof Double) {
             return new Double("-1");
-        }else if ( o instanceof  Boolean){
+        } else if (o instanceof Boolean) {
             return new Boolean(false);
-        }else if ( o instanceof  Character){
+        } else if (o instanceof Character) {
             return new Character('1');
-        }else {
+        } else {
             FallbackData Data = createDefaultFallbackData(method);
-            fallbackData=Data;
+            fallbackData = Data;
         }
         return fallbackData;
     }
@@ -150,13 +150,12 @@ public class FeignFallbackimplProxy implements InvocationHandler {
     private void traceLog(Method method, Object[] args) {
         String className = method.getDeclaringClass().getName();
         String methodName = method.getName();
-        if (logger.isInfoEnabled()){
+        if (logger.isInfoEnabled()) {
             String jsonString = JSON.toJSONString(args);
-            logger.debug("\n\n >>>>>>>>>> \n className ="+className+" , methodName = "+methodName+" args = "+jsonString+
+            logger.debug("\n\n >>>>>>>>>> \n className =" + className + " , methodName = " + methodName + " args = " + jsonString +
                     "\n<<<<<<<<<<<<<<<<\n\n");
         }
     }
-
 
 
 }

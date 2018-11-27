@@ -18,15 +18,15 @@ import java.util.Map;
  * @author kof wang
  */
 @Component
-public class FeignClientsBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor{
-    private static Logger logger= LoggerFactory.getLogger(FeignClientsBeanDefinitionRegistryPostProcessor.class);
+public class FeignClientsBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor {
+    private static Logger logger = LoggerFactory.getLogger(FeignClientsBeanDefinitionRegistryPostProcessor.class);
 
     public final static Map<String, Object> fallbacks = new HashMap();
 
     @Override
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry beanDefinitionRegistry) throws BeansException {
 
-        for (String clasz: fallbacks.keySet()){
+        for (String clasz : fallbacks.keySet()) {
             GenericBeanDefinition definition = new GenericBeanDefinition();
             try {
                 definition.setBeanClass(Thread.currentThread().getContextClassLoader().loadClass(clasz));    //设置类
@@ -40,7 +40,7 @@ public class FeignClientsBeanDefinitionRegistryPostProcessor implements BeanDefi
             definition.setLazyInit(false);          //设置是否懒加载
             definition.setAutowireCandidate(true);  //设置是否可以被其他对象自动注入
             beanDefinitionRegistry.registerBeanDefinition(clasz, definition);
-            logger.info("【fallback 注册 】= BeanDefinitionRegistry.registerBeanDefinition() 【className】 = " +definition.getBeanClassName());
+            logger.info("【fallback 注册 】= BeanDefinitionRegistry.registerBeanDefinition() 【className】 = " + definition.getBeanClassName());
         }
 
     }
@@ -50,7 +50,6 @@ public class FeignClientsBeanDefinitionRegistryPostProcessor implements BeanDefi
 
 
     }
-
 
 
 }

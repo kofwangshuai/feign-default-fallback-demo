@@ -11,5 +11,5 @@ import java.lang.annotation.*;
 @Documented
 @EnableFeignClients
 @Import({FeignClientsFallbackRegistrar.class})
-public @interface EnableFeignFallbackClients  {
+public @interface EnableFeignFallbackClients {
 }

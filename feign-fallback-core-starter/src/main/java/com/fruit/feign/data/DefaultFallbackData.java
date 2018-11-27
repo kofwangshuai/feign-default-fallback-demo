@@ -1,10 +1,10 @@
 package com.fruit.feign.data;
 
-/** 1
- *   发生服务熔断的时候 ，响应数据对象
- *
- * **/
-public class DefaultFallbackData<K ,V> implements FallbackData<K, V> {
+/**
+ * 1
+ * 发生服务熔断的时候 ，响应数据对象
+ **/
+public class DefaultFallbackData<K, V> implements FallbackData<K, V> {
 
     private K code;
     private V message;
@@ -18,12 +18,12 @@ public class DefaultFallbackData<K ,V> implements FallbackData<K, V> {
     }
 
     @Override
-    public  K getCode() {
+    public K getCode() {
         return code;
     }
 
     @Override
-    public  V getMessage() {
+    public V getMessage() {
         return message;
     }
 
